@@ -47,7 +47,7 @@ void entry(flight_data* (&massiv), int& k) {
 
 void print(flight_data* massiv, int k) {
     cout << "----------------------------------" << endl;
-    for (int i = 1; i < k; i++) {
+    for (int i = 0; i < k; i++) {
         cout << "Номер рейса" << " " << massiv[i].f_n << endl;
         cout << "Дата прибытия" << " " << massiv[i].f_d.day << "/" << massiv[i].f_d.month << "/" << massiv[i].f_d.year << endl;
         cout << "Количество пассажиров" << " " << massiv[i].f_p << endl;
@@ -156,25 +156,24 @@ void delet(flight_data* (&massiv), int& k) {
 
 void sort(flight_data* massiv, int k) {
     flight_data massiv_2;
-    for (int i = 0; i < k; i++) {
-        for (int j = 0; j < k; j++) {
-            if (massiv[j].f_d.day < massiv[j + 1].f_d.day) {
-            copy_2(massiv_2, massiv[j+1]);
-            copy_2(massiv[j+1], massiv[j]);
+    for (int i = 1; i < k; i++) {
+        for (int j = i; j > 0 && massiv[j - 1].f_d.day > massiv[j].f_d.day; j--) {
+            copy_2(massiv_2, massiv[j - 1]);
+            copy_2(massiv[j - 1], massiv[j]);
             copy_2(massiv[j], massiv_2);
         }
     }
     for (int i = 0; i < k; i++) {
-        for (int j = i; j > 0 && massiv[j1].f_d.month < massiv[j+1].f_d.month; j--) {
-            copy_2(massiv_2, massiv[j+1]);
-            copy_2(massiv[j+1], massiv[j]);
+        for (int j = i; j > 0 && massiv[j - 1].f_d.month > massiv[j].f_d.month; j--) {
+            copy_2(massiv_2, massiv[j - 1]);
+            copy_2(massiv[j - 1], massiv[j]);
             copy_2(massiv[j], massiv_2);
         }
     }
     for (int i = 0; i < k; i++) {
-        for (int j = i; j > 0 && massiv[j].f_d.year < massiv[j+1].f_d.year; j--) {
-            copy_2(massiv_2, massiv[j+1]);
-            copy_2(massiv[j+1], massiv[j]);
+        for (int j = i; j > 0 && massiv[j - 1].f_d.year > massiv[j].f_d.year; j--) {
+            copy_2(massiv_2, massiv[j - 1]);
+            copy_2(massiv[j - 1], massiv[j]);
             copy_2(massiv[j], massiv_2);
         }
     }
@@ -232,8 +231,8 @@ void sum_pass(flight_data* (&massiv_old), city_pass* (&massiv_new), int k) {
 void high_pass(flight_data* (&massiv), int& k) {
     city_pass* massiv_2 = new city_pass[k];
     for (int i = 0; i < k; i++) {
-        massiv_2[k].city = "";
-        massiv_2[k].pass = 0;
+        massiv_2[i].city = "";
+        massiv_2[i].pass = 0;
     }
     delet_repeat(massiv, massiv_2, k);
     sum_pass(massiv, massiv_2, k);
@@ -250,6 +249,24 @@ void high_pass(flight_data* (&massiv), int& k) {
     delete[]massiv_2;
 }
 
+void profit(flight_data* massiv, int k) {
+    int all;
+    for (int i = 0; i < k; i++) {
+        if (massiv[i].f_m = 737)
+            all = 150;
+        else {
+            if (massiv[i].f_m = 747)
+                all = 467;
+            else
+                all = 300;
+        }
+        if (1 > (massiv[i].f_p / all) >= 0.75)
+            cout << " Рейс номер: " << massiv[i].f_n << " - " << " Окупается" << endl;
+        else
+            cout << " Рейс номер: " << massiv[i].f_n << " - " << " Не окупается" << endl;
+    }
+}
+
 int  command;
 void menu() {
     cout << "Выберите действие" << endl;
@@ -262,6 +279,7 @@ void menu() {
     cout << "Сортировка данных по дате: 6" << endl;
     cout << "Информация по номеру рейса: 7" << endl;
     cout << "Наибольший пассажиропоток: 8" << endl;
+    cout << "Посмотреть рентабельность рейсов: 9" << endl;
     cout << "Выбор команды: " ;
     cin >> command;
 }
@@ -358,7 +376,17 @@ void main()
             system("cls");
             menu();
             break;
-
+        case 9:
+            system("cls");
+            if (_massiv != 0) {
+                profit(massiv, _massiv);
+            }
+            else
+                cout << "Данных нет" << endl;
+            system("pause");
+            system("cls");
+            menu();
+            break;
         default:
             cout << "Номер действия указан неверно" << endl;
             system("pause");
